@@ -12,6 +12,9 @@
 		B075BDDB199D709700CDA3AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B075BDD9199D709700CDA3AB /* Main.storyboard */; };
 		B075BDDD199D709700CDA3AB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B075BDDC199D709700CDA3AB /* Images.xcassets */; };
 		B075BDE9199D709800CDA3AB /* AvFoundationEngineFrobsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B075BDE8199D709800CDA3AB /* AvFoundationEngineFrobsTests.swift */; };
+		B075BDF4199D7C3A00CDA3AB /* modem-dialing-02.wav in Resources */ = {isa = PBXBuildFile; fileRef = B075BDF2199D7C3A00CDA3AB /* modem-dialing-02.wav */; };
+		B075BDF5199D7C3A00CDA3AB /* modem-dialing-02.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B075BDF3199D7C3A00CDA3AB /* modem-dialing-02.mp3 */; };
+		B075BE2A199E5A0200CDA3AB /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B075BE29199E5A0200CDA3AB /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +37,9 @@
 		B075BDE2199D709800CDA3AB /* AvFoundationEngineFrobsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AvFoundationEngineFrobsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B075BDE7199D709800CDA3AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B075BDE8199D709800CDA3AB /* AvFoundationEngineFrobsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvFoundationEngineFrobsTests.swift; sourceTree = "<group>"; };
+		B075BDF2199D7C3A00CDA3AB /* modem-dialing-02.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "modem-dialing-02.wav"; sourceTree = "<group>"; };
+		B075BDF3199D7C3A00CDA3AB /* modem-dialing-02.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "modem-dialing-02.mp3"; sourceTree = "<group>"; };
+		B075BE29199E5A0200CDA3AB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,7 @@
 		B075BDC7199D709700CDA3AB = {
 			isa = PBXGroup;
 			children = (
+				B075BE29199E5A0200CDA3AB /* README.md */,
 				B075BDD2199D709700CDA3AB /* AvFoundationEngineFrobs */,
 				B075BDE5199D709800CDA3AB /* AvFoundationEngineFrobsTests */,
 				B075BDD1199D709700CDA3AB /* Products */,
@@ -75,6 +82,8 @@
 		B075BDD2199D709700CDA3AB /* AvFoundationEngineFrobs */ = {
 			isa = PBXGroup;
 			children = (
+				B075BDF2199D7C3A00CDA3AB /* modem-dialing-02.wav */,
+				B075BDF3199D7C3A00CDA3AB /* modem-dialing-02.mp3 */,
 				B075BDD5199D709700CDA3AB /* AppDelegate.swift */,
 				B075BDD7199D709700CDA3AB /* ViewController.swift */,
 				B075BDD9199D709700CDA3AB /* Main.storyboard */,
@@ -189,6 +198,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B075BDF5199D7C3A00CDA3AB /* modem-dialing-02.mp3 in Resources */,
+				B075BDF4199D7C3A00CDA3AB /* modem-dialing-02.wav in Resources */,
 				B075BDDB199D709700CDA3AB /* Main.storyboard in Resources */,
 				B075BDDD199D709700CDA3AB /* Images.xcassets in Resources */,
 			);
@@ -208,6 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B075BE2A199E5A0200CDA3AB /* README.md in Sources */,
 				B075BDD8199D709700CDA3AB /* ViewController.swift in Sources */,
 				B075BDD6199D709700CDA3AB /* AppDelegate.swift in Sources */,
 			);
@@ -397,6 +409,7 @@
 				B075BDEE199D709800CDA3AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B075BDEF199D709800CDA3AB /* Build configuration list for PBXNativeTarget "AvFoundationEngineFrobsTests" */ = {
 			isa = XCConfigurationList;
@@ -405,6 +418,7 @@
 				B075BDF1199D709800CDA3AB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
