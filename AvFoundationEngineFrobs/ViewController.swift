@@ -86,6 +86,7 @@ class ViewController: UIViewController {
         engine.connect(delayNode, to: mixer, format: format)
         
         // tapMixer()
+
         
     }
     
@@ -112,12 +113,16 @@ class ViewController: UIViewController {
             println("error couldn't start engine")
             if let e = error {
                 println("error \(e.localizedDescription)")
+                
+                
+                
+                
             }
         }
     }
     
     /**
-    Getting garbage from the input node. What's wrong?
+    Use headphones!
     */
     @IBAction func useInputNode(sender: AnyObject) {
         //engine.disconnectNodeOutput(playerNode)
@@ -125,19 +130,93 @@ class ViewController: UIViewController {
         //engine.reset()
         println("\(__FUNCTION__) connecting input \(engine.inputNode)")
         
-        setSessionPlayAndRecord()
+        /*
+        Audio input is performed via an input node. The engine creates a singleton on demand when
+        this property is first accessed. To receive input, connect another node from the output of
+        the input node, or create a recording tap on it.
+        
+        The AVAudioSesssion category and/or availability of hardware determine whether an app can
+        perform input. Check the input format of input node (i.e. hardware format) for non-zero
+        sample rate and channel count to see if input is enabled.
+        */
+        
+        setSessionRecord()
         var format = engine.inputNode.inputFormatForBus(0)
         engine.mainMixerNode.volume = 1.0
         engine.mainMixerNode.pan = 0.0
-        engine.connect(engine.inputNode, to: engine.mainMixerNode, format: format)
+        println("input format sr \(format.sampleRate) channels \(format.channelCount)")
+        engine.connect(engine.inputNode, to: reverbNode, format: format)
+//        engine.connect(engine.inputNode, to: engine.mainMixerNode, format: format)
         // engineStart()
-        //        engine.disconnectNodeOutput(engine.inputNode)
+        // engine.disconnectNodeOutput(engine.inputNode)
     }
+    
+    func recordInputNodeToFile() {
+        let filename = "testrecord.wav"
+        let docsDir = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as NSString
+        let path = docsDir.stringByAppendingPathComponent(filename)
+        let url = NSURL(fileURLWithPath: path)
+        
+        let settings = [
+            AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: 44100.0,
+            AVNumberOfChannelsKey: 1 ]
+        
+        var possibleError : NSError?
+        audioFile = AVAudioFile(forWriting: url, settings: settings, error: &possibleError)
+        if let error = possibleError {
+            println("Error opening audio file for writing: \(error.localizedDescription)")
+            return
+        }
+        
+        let input = engine.inputNode
+        input.installTapOnBus(0, bufferSize: 4096, format: audioFile.processingFormat) {
+            (buffer : AVAudioPCMBuffer!, when : AVAudioTime!) in
+            //println("Got buffer of length: \(buffer.frameLength) at time: \(when)")
+            
+            var possibleWriteError : NSError?
+            self.audioFile.writeFromBuffer(buffer, error: &possibleWriteError)
+            if let error = possibleWriteError {
+                println("Error writing audio data to file")
+            }
+        }
+        
+        println("starting audio engine for recording")
+        println("writing to \(path)")
+        engine.startAndReturnError(&possibleError)
+        
+        if let error = possibleError {
+            println("Error starting audio engine: \(error.localizedDescription)")
+        }
+        
+    }
+    func stopRecording() {
+        self.engine.inputNode.removeTapOnBus(0)
+        self.engine.stop()
+    }
+    
     
     func setSessionPlayAndRecord() {
         let session:AVAudioSession = AVAudioSession.sharedInstance()
         var error: NSError?
         if !session.setCategory(AVAudioSessionCategoryPlayAndRecord, error:&error) {
+            println("could not set session category")
+            if let e = error {
+                println(e.localizedDescription)
+            }
+        }
+        if !session.setActive(true, error: &error) {
+            println("could not make session active")
+            if let e = error {
+                println(e.localizedDescription)
+            }
+        }
+    }
+    
+    func setSessionRecord() {
+        let session:AVAudioSession = AVAudioSession.sharedInstance()
+        var error: NSError?
+        if !session.setCategory(AVAudioSessionCategoryRecord, error:&error) {
             println("could not set session category")
             if let e = error {
                 println(e.localizedDescription)
@@ -293,7 +372,7 @@ class ViewController: UIViewController {
     */
     func printLoudestSample() {
         var error: NSError?
-        let fileURL:NSURL = NSBundle.mainBundle().URLForResource("modem-dialing-02", withExtension: "mp3")
+        let fileURL:NSURL = NSBundle.mainBundle().URLForResource("modem-dialing-02", withExtension: "mp3")!
         
         let audioFile = AVAudioFile(forReading: fileURL, error: &error)
         if let e = error {
@@ -351,6 +430,7 @@ class ViewController: UIViewController {
                 var data = buffer.floatChannelData[channelIndex]
                 for var frameIndex = 0; frameIndex < Int(buffer.frameLength); ++frameIndex {
                     // data[frameIndex] = blah blah
+                    self.playerTapNode.scheduleBuffer(buffer, atTime: nil, options: nil, completionHandler: nil)
                 }
             }
         })
@@ -375,25 +455,25 @@ class ViewController: UIViewController {
         playerTapNode.play()
         println("playing tap node \(engine.running)")
     }
-
+    
     /**
     Taps the mixer output and shoves it into the playerTapNode for later playback.
     */
     func tapMixer() {
         var frameLength:AVAudioFrameCount = 4096
-
+        
         var format = mixer.outputFormatForBus(0)
         mixer.installTapOnBus(0, bufferSize:frameLength, format: format, block:
             {(buffer:AVAudioPCMBuffer!, time:AVAudioTime!) in
-//                println("got a mixer buffer \(time)")
-//                println("got a mixer buffer bc \(buffer.format.channelCount)")
-//                println("got a mixer buffer fc \(format.channelCount)")
+                //                println("got a mixer buffer \(time)")
+                //                println("got a mixer buffer bc \(buffer.format.channelCount)")
+                //                println("got a mixer buffer fc \(format.channelCount)")
                 self.playerTapNode.scheduleBuffer(buffer, atTime: nil, options: nil, completionHandler: nil)
         })
     }
     
     
-  
+    
     
     
     func radiansToDegrees(radians:Double) -> Double {
