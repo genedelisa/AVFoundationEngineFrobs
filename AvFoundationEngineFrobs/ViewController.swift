@@ -53,7 +53,8 @@ class ViewController: UIViewController {
         // engine.connect(playerNode, to: mixer, format: mixer.outputFormatForBus(0))
         //        engine.connect(playerNode, to: engine.mainMixerNode, format: mixer.outputFormatForBus(0))
         
-        
+        mixer.outputVolume = 1.0
+        mixer.pan = 0.0 // -1 to +1
         var iformat = engine.inputNode.inputFormatForBus(0)
         println("input format \(iformat)")
         
@@ -113,10 +114,6 @@ class ViewController: UIViewController {
             println("error couldn't start engine")
             if let e = error {
                 println("error \(e.localizedDescription)")
-                
-                
-                
-                
             }
         }
     }
@@ -126,7 +123,7 @@ class ViewController: UIViewController {
     */
     @IBAction func useInputNode(sender: AnyObject) {
         //engine.disconnectNodeOutput(playerNode)
-        // engine.stop()
+        engine.stop()
         //engine.reset()
         println("\(__FUNCTION__) connecting input \(engine.inputNode)")
         
@@ -140,14 +137,16 @@ class ViewController: UIViewController {
         sample rate and channel count to see if input is enabled.
         */
         
-        setSessionRecord()
+//        setSessionRecord()
+        setSessionPlayAndRecord()
+        
         var format = engine.inputNode.inputFormatForBus(0)
         engine.mainMixerNode.volume = 1.0
         engine.mainMixerNode.pan = 0.0
         println("input format sr \(format.sampleRate) channels \(format.channelCount)")
         engine.connect(engine.inputNode, to: reverbNode, format: format)
 //        engine.connect(engine.inputNode, to: engine.mainMixerNode, format: format)
-        // engineStart()
+         engineStart()
         // engine.disconnectNodeOutput(engine.inputNode)
     }
     
@@ -351,8 +350,8 @@ class ViewController: UIViewController {
     func playerNodePlay() {
         if engine.running {
             println("engine is running")
-            //engine.disconnectNodeOutput(engine.inputNode)
-            // engine.connect(playerNode, to: reverbNode, format: mixer.outputFormatForBus(0))
+            engine.disconnectNodeOutput(engine.inputNode)
+            engine.connect(playerNode, to: reverbNode, format: mixer.outputFormatForBus(0))
             playerNode.play()
         } else {
             var error: NSError?
@@ -483,6 +482,8 @@ class ViewController: UIViewController {
     func degreesToRadians(degrees:Double) -> Double {
         return degrees / (180.0 * M_PI)
     }
+    
+   
     
 }
 
